@@ -27,6 +27,7 @@ body {
     font-size: 30px;
     font-family: 'Courier New', Courier, monospace;
     background-color: white;
+    text-align: right;
 }
 
 .calc-operators {
