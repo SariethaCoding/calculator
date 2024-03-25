@@ -1,7 +1,7 @@
 
 let calcDisplayText = "";
-let firstNumber = 0;
-let secondNumber = 0;
+let firstNumber = "";
+let secondNumber = "";
 let firstNumberDone = false;
 let storedOperator = "";
 
@@ -34,8 +34,8 @@ const operatorButtons = document.querySelectorAll("div.calc-operators input[type
 operatorButtons.forEach((button) => {
     //console.log("this button i s: " + button);
     button.addEventListener("click", function() {
-        updateCalcDisplay(this.value,true);
         operatorPressed(this.value);
+      //updateCalcDisplay(this.value,true);
     });
     
 });
@@ -47,6 +47,9 @@ function updateNumbers(pressedNum) {
         firstNumber = firstNumber + pressedNum;
     }
     else {
+        if(secondNumber === "") {
+            calcDisplayText = "";
+        }
         secondNumber = secondNumber + pressedNum;
     } 
 
@@ -69,11 +72,18 @@ function operatorPressed(pressedOperator) {
     if(!firstNumberDone) {
         firstNumberDone = true;
         storedOperator = pressedOperator;
+        //updateCalcDisplay(firstNumber,true);
     }
     // else its the second number and we need to calculate the math
     else {
         console.log("go go math : " + firstNumber + " " + storedOperator + " " + secondNumber);
-        Operate(storedOperator, firstNumber, secondNumber);
+        result = Operate(storedOperator, firstNumber, secondNumber);
+        updateCalcDisplay(result,true);
+
+        // the result then becomes the first number to do the next calculation with
+        firstNumber = result;
+        secondNumber = "";
+        storedOperator = pressedOperator;
     }
 }
 
@@ -82,8 +92,8 @@ function clearAll() {
     console.log("CLEARING");
     document.getElementById("cDisplay").textContent = "0";
     calcDisplayText = "";
-    firstNumber = 0;
-    secondNumber = 0;
+    firstNumber = "";
+    secondNumber = "";
     firstNumberDone = false;
     storedOperator = "";
 
@@ -108,8 +118,10 @@ function Multiply(num1, num2) {
 function Divide(num1, num2) {
     // Check for divide by zero
     if (num1 == 0 || num2 == 0) {
+        updateCalcDisplay("YOU BROKE IT",true);
         console.log("Divide by zero detected... Starting end of world sequence now...");
-    }
+       return "";
+     }
     else {
         let answer = num1 / num2;
         return answer;
@@ -146,8 +158,7 @@ function Operate(operator, num1, num2) {
         }
 
         console.log("Result : " + result);
-        updateCalcDisplay(result,true);
-
+        return result;
     }    
     else {
         console.log("Not valid numbers");
