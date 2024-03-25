@@ -21,6 +21,7 @@ body {
 
 .calc-display {
     width: 90%;
+    height: 45px;
     margin: auto;
     padding: 10px;
     border: 1px solid gray;
@@ -28,6 +29,12 @@ body {
     font-family: 'Courier New', Courier, monospace;
     background-color: white;
     text-align: right;
+}
+
+.calc-display #history {
+    font-size: 10px;
+    color: #4A6670;
+    height: 12px;
 }
 
 .calc-operators {
