@@ -62,18 +62,22 @@ function updateCalcDisplay(myValue,clearDisplay) {
         calcDisplayText = "";
     }
     calcDisplayText = calcDisplayText + myValue;
+
+    let calcHistory = firstNumber + " " + storedOperator + " " + secondNumber;
     
-    console.log("to display : " + calcDisplayText);
+    //console.log("to display : " + calcDisplayText);
     
     document.getElementById("cDisplay").textContent = calcDisplayText;
+    document.getElementById("history").textContent = calcHistory;
 }
 
 function operatorPressed(pressedOperator) {
     if(!firstNumberDone) {
         firstNumberDone = true;
         storedOperator = pressedOperator;
-        //updateCalcDisplay(firstNumber,true);
+        updateCalcDisplay(firstNumber,true);
     }
+
     // else its the second number and we need to calculate the math
     else {
         console.log("go go math : " + firstNumber + " " + storedOperator + " " + secondNumber);
@@ -91,6 +95,7 @@ function operatorPressed(pressedOperator) {
 function clearAll() {
     console.log("CLEARING");
     document.getElementById("cDisplay").textContent = "0";
+    document.getElementById("history").textContent = "";
     calcDisplayText = "";
     firstNumber = "";
     secondNumber = "";
@@ -154,6 +159,9 @@ function Operate(operator, num1, num2) {
 
             case "/"  :
                 result =  Divide(num1, num2);
+                break;
+
+            case "=" :
                 break;
         }
 
