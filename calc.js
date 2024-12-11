@@ -5,7 +5,7 @@ let secondNumber = "";
 let firstNumberDone = false;
 let storedOperator = "";
 
-// --- Clear All 
+// --- Clear All Button
 const clearButton = document.querySelector(".clearbutton");
 clearButton.addEventListener("click", clearAll);
 // ---
@@ -71,23 +71,54 @@ function updateCalcDisplay(myValue,clearDisplay) {
     document.getElementById("history").textContent = calcHistory;
 }
 
+
 function operatorPressed(pressedOperator) {
-    if(!firstNumberDone) {
-        firstNumberDone = true;
-        storedOperator = pressedOperator;
-        updateCalcDisplay(firstNumber,true);
+    // first check if it's the equal sign that was pressed...
+    if(pressedOperator == "=") {
+        console.log("= sign pressed | firstnumberdone = " + firstNumberDone);
+        if(secondNumber != ""){
+            console.log("we do have a second num");
+            firstNumberDone = true;
+
+            result = Operate(storedOperator, firstNumber, secondNumber);
+
+            firstNumber = result;
+            storedOperator = "";
+            secondNumber = "";
+
+            updateCalcDisplay(firstNumber,true);
+        }
+            
     }
-
-    // else its the second number and we need to calculate the math
+    // else calculate +-/*
     else {
-        console.log("go go math : " + firstNumber + " " + storedOperator + " " + secondNumber);
-        result = Operate(storedOperator, firstNumber, secondNumber);
-        updateCalcDisplay(result,true);
+        if(!firstNumberDone) {
+            firstNumberDone = true;
+            storedOperator = pressedOperator;
+            
+            updateCalcDisplay(firstNumber,true);
+        }
+    
 
-        // the result then becomes the first number to do the next calculation with
-        firstNumber = result;
-        secondNumber = "";
-        storedOperator = pressedOperator;
+        // else its the second number and we need to calculate the math
+        // but first  make sure they did actually enter a second number and didn't just press =
+        else {
+            if(secondNumber === "") {
+                console.log("NO SECOND NUMBER ENTERED")
+                storedOperator = pressedOperator;
+                updateCalcDisplay("",false);
+            }
+            else {
+                console.log("go go math : " + firstNumber + " " + storedOperator + " " + secondNumber);
+                result = Operate(storedOperator, firstNumber, secondNumber);
+                updateCalcDisplay(result,true);
+
+                // the result then becomes the first number to do the next calculation with
+                firstNumber = result;
+                secondNumber = "";
+                storedOperator = pressedOperator;
+            }
+        }
     }
 }
 
@@ -142,8 +173,8 @@ function validateNumber(num1,num2) {
 
 function Operate(operator, num1, num2) {
     if(validateNumber(num1,num2)) {
-        num1 = parseInt(num1);
-        num2 = parseInt(num2);
+        num1 = parseFloat(num1);
+        num2 = parseFloat(num2);
         switch(operator) {
             case "+" :
                 result =  Add(num1, num2);
@@ -166,6 +197,14 @@ function Operate(operator, num1, num2) {
         }
 
         console.log("Result : " + result);
+       
+        // Round the numbers down to something sensible if need be
+        if(!Number.isInteger(result)) {
+            console.log("we have a floater!");
+            result = parseFloat(result.toFixed(4));
+        }
+        
+        
         return result;
     }    
     else {
