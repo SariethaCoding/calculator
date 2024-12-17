@@ -16,7 +16,6 @@ const numButtons = document.querySelectorAll("div.calc-numbers input[type='butto
 
 
 numButtons.forEach((button) => {
-    //console.log("this button i s: " + button);
     button.addEventListener("click", function() {
         updateNumbers(this.value);
         updateCalcDisplay(this.value,false);
@@ -32,10 +31,8 @@ const operatorButtons = document.querySelectorAll("div.calc-operators input[type
 
 
 operatorButtons.forEach((button) => {
-    //console.log("this button i s: " + button);
     button.addEventListener("click", function() {
         operatorPressed(this.value);
-      //updateCalcDisplay(this.value,true);
     });
     
 });
@@ -43,6 +40,12 @@ operatorButtons.forEach((button) => {
 // ---
 
 function updateNumbers(pressedNum) {
+
+    // If . was pressed then disable the button so the user can't type numbers like 39.432.13232.232
+    if(pressedNum == ".") {
+        document.getElementById("pointbutton").disabled = true;
+    }
+
     if(!firstNumberDone) {
         firstNumber = firstNumber + pressedNum;
     }
@@ -50,11 +53,9 @@ function updateNumbers(pressedNum) {
         if(secondNumber === "") {
             calcDisplayText = "";
         }
+        
         secondNumber = secondNumber + pressedNum;
     } 
-
-    console.log("First Number : " + firstNumber + " | Second Number : " + secondNumber);    
-
 }
 
 function updateCalcDisplay(myValue,clearDisplay) {
@@ -65,19 +66,25 @@ function updateCalcDisplay(myValue,clearDisplay) {
 
     let calcHistory = firstNumber + " " + storedOperator + " " + secondNumber;
     
-    //console.log("to display : " + calcDisplayText);
-    
     document.getElementById("cDisplay").textContent = calcDisplayText;
     document.getElementById("history").textContent = calcHistory;
 }
 
 
 function operatorPressed(pressedOperator) {
+    // enable point button again if it was diasabled
+    if(document.getElementById("pointbutton").disabled = true) {
+        document.getElementById("pointbutton").disabled = false;
+    }
+
+    // Has any value been typed, or is the operater the first button, cause in that case...
+    if(firstNumber == "") {
+        firstNumber = 0;
+    }
+
     // first check if it's the equal sign that was pressed...
     if(pressedOperator == "=") {
-        console.log("= sign pressed | firstnumberdone = " + firstNumberDone);
         if(secondNumber != ""){
-            console.log("we do have a second num");
             firstNumberDone = true;
 
             result = Operate(storedOperator, firstNumber, secondNumber);
@@ -104,12 +111,10 @@ function operatorPressed(pressedOperator) {
         // but first  make sure they did actually enter a second number and didn't just press =
         else {
             if(secondNumber === "") {
-                console.log("NO SECOND NUMBER ENTERED")
                 storedOperator = pressedOperator;
                 updateCalcDisplay("",false);
             }
             else {
-                console.log("go go math : " + firstNumber + " " + storedOperator + " " + secondNumber);
                 result = Operate(storedOperator, firstNumber, secondNumber);
                 updateCalcDisplay(result,true);
 
@@ -124,7 +129,6 @@ function operatorPressed(pressedOperator) {
 
 
 function clearAll() {
-    console.log("CLEARING");
     document.getElementById("cDisplay").textContent = "0";
     document.getElementById("history").textContent = "";
     calcDisplayText = "";
@@ -152,9 +156,10 @@ function Multiply(num1, num2) {
 }
 
 function Divide(num1, num2) {
-    // Check for divide by zero
+    // Check for divide by zero and write funny msg if detected
     if (num1 == 0 || num2 == 0) {
-        updateCalcDisplay("YOU BROKE IT",true);
+        clearAll();
+        updateCalcDisplay("YOU BROKE MATH",true);
         console.log("Divide by zero detected... Starting end of world sequence now...");
        return "";
      }

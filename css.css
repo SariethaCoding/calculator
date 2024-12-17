@@ -41,7 +41,6 @@ body {
 
 #calculator-buttons {
     display: flex;
-    border: solid 0px red;
     margin-top: 10px;
 }
 
@@ -51,14 +50,18 @@ body {
     justify-content:left;
     align-items:start;
     display: flex;   
-    border: 0px solid red;
 }
 
 .clearbutton {
-    width: 70px;
-    height: 60px;
+    width: 80px;
+    height: 70px;
     font-size: 22px;
     border-radius: 10px;
+    background-color:darkgrey;
+}
+
+.clearbutton:hover {
+    background-color: gray;
 }
 
 .calc-operators {
@@ -86,8 +89,8 @@ body {
 
 .calc-numbers {
     display: flex;  
-    flex-wrap: wrap;
-    justify-content: space-evenly;
+    flex-wrap:wrap;
+    justify-content:space-evenly;
 }
 
 .calc-numbers input[type=button] {
@@ -100,8 +103,4 @@ body {
 
 .calc-numbers input:hover {
     background-color: gray;
-}
-
-.calc-numbers .clearbutton {
-    flex:2;
 }
